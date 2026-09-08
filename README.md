@@ -60,6 +60,12 @@ Can I just have my dependenices listed and work on the project?
 
 If you treat your code a a package, you may do it in a few ways.
 
+This is, first of all, useful, when you do python testing.
+Code in `tests/` folder is not included into your python distribution,
+and it treats content of `src/` as an external package when you
+run tests.
+But still, you are allowed to edit-save-rerun.
+
 ### Classic "hacker" way
 
 ```bash
@@ -72,9 +78,19 @@ demo-add
 
 # now edit the function, and repeat!
 demo-add
+
+# see your dependencies versions
+pip freeze
 ```
 
 ### uv way
+
+`uv` keeps a frozen list of dependencies as a separate file.
+Commiting this file is good, when you develop an application,
+and it is questionable, when you develop a library.
+Why? You don't have control over user's environment, so you
+prefer your library to be compatible with a wider range of
+dependencies.
 
 ```bash
 deactivate
@@ -84,15 +100,34 @@ uv sync
 uv run demo-add
 ```
 
-Similar for poetry, but requires different `pyproject.toml` format.
+Similar for the `poetry`, but requires different `pyproject.toml` format.
 
 ## Is this enough?
+
+"Environment" -- settings in the operating system,
+usually configuration files, environment variables,
+ssh keys, ..., even a set of installed fonts,
+which are individual for every machine. A very good example is
+your `$PATH` environment variable, which decides where is your
+python, where are binary dependencies, ...
+
+```bash
+cat ~/.zshrc
+echo $PATH
+```
+
+Example of the effect:
 
 ```bash
 # hash seed is taken from env var
 PYTHONHASHSEED=0 python3.12 -c 'print(hash("isolate"))'
 PYTHONHASHSEED=1 python3.12 -c 'print(hash("isolate"))'
+```
 
+The variable above can be set in `~/.bashrc` file, and you will
+never know.
+
+```bash
 # locale:
 # The C locale is a special locale that is meant to be
 # the simplest locale. You could also say that while
@@ -101,11 +136,20 @@ PYTHONHASHSEED=1 python3.12 -c 'print(hash("isolate"))'
 LC_ALL=C python3.12 4_locale.py
 
 python3.12 4_locale.py
-# or explicitly
+
+# or explicitly specify the locale
 LC_ALL=en_US.UTF-8 python3.12 4_locale.py
+LC_ALL=ru_RU.UTF-8 python3.12 4_locale.py
 ```
 
 ## Platform (CPU + operating system)
+
+If you literally want it to run ON THE SAME MACHINE.
+2 levels of definition:
+- docker file (~pyproject.toml)
+- image (~uv.lock)
+
+And then you may create a container based on the image.
 
 ### Prepare environments
 
@@ -119,6 +163,10 @@ docker build --platform=linux/amd64 --network=host -t str-anger/u26p313x86 -f 0_
 docker run -ti --entrypoint /bin/bash --volume .:/root/isolate str-anger/u26p313
 # x86
 docker run -ti --platform=linux/amd64 --entrypoint /bin/bash --volume .:/root/isolate str-anger/u26p313x86
+
+# on both to see that the files were bridged
+cd ~
+ls isolate
 ```
 
 Validate platform, and a dependency version:
@@ -136,8 +184,13 @@ And then let's run the script:
 python3.13 isolate/0_platform.py
 ```
 
+also compare it with 3.13 on a mac:
 
-## Additional material
+```bash
+.venv313/bin/python 0_platform.py
+```
+
+## Additional materials
 
 Additional materials in [additional](./additional/) folder
 are prepared with the help of AI and were not validated.

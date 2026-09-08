@@ -5,8 +5,8 @@ print(f"  numpy {np.__version__}")
 # 1. A tiny float64 added to a float32 scalar.
 #    numpy 1.x promoted to float64 and kept the value; 2.x stays float32 and loses it.
 x = np.float32(1.0)
-r = x + 1e-100
-print(f"  np.float32(1.0) + 1e-100  -> dtype={r.dtype}  value={float(r) - 1.0:.3e} above 1.0")
+r = x + 1e-15
+print(f"  np.float32(1.0) + 1e-100  -> dtype={r.dtype}  value={float(r):.30f}")
 
 # 2. Integer overflow that used to silently widen.
 u = np.uint8(200)
