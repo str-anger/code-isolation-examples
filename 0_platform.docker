@@ -1,0 +1,6 @@
+FROM python:3.13-slim
+
+RUN apt-get install bash
+RUN pip install numpy==2.5.2
+
+CMD ["/bin/bash"]

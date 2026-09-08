@@ -1,0 +1,2 @@
+# The intent. Ranges, written by a human.
+numpy>=1.26,<2

@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "demo-add"
+version = "0.1.0"
+description = "Minimal editable-install example."
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=2.0.0",
+]
+
+[project.scripts]
+demo-add = "main:main"
+
+# Flat layout: two top-level modules, so setuptools is told explicitly.
+[tool.setuptools]
+py-modules = ["adder", "main"]

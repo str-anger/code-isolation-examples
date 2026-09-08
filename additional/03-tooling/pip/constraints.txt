@@ -1,0 +1,3 @@
+# Applied to transitive dependencies only; does not add them as requirements.
+# Use with:  PIP_CONSTRAINT=constraints.txt pip install -r requirements.txt
+setuptools<75
